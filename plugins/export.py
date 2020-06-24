@@ -68,7 +68,7 @@ def export_json(issues, revisions=[], be=0):
     if be: return obj
 
     obj_json = json.dumps(obj)
-    print obj_json
+    print(obj_json)
 
 def extract_obj(issue):
     return dict(

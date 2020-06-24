@@ -20,7 +20,7 @@ _CONFIG={
 }
 
 def error(msg):
-	print "Error:", msg
+	print("Error:", msg)
 	exit(2)
 
 class Hooks(object):
@@ -85,7 +85,7 @@ def load_config():
 def store_config(path):
 	"""Store config to file"""
 	fh = open(path, 'w')
-	for key,val in _CONFIG.items():
+	for key,val in list(_CONFIG.items()):
 		if key == "data_dir": continue
 		fh.write("%s: %s\n" % (key,val))
 	fh.close()
@@ -116,7 +116,7 @@ def load_lfile(path):
 
 def store_lfile(path, msg, props):
 	fh = open(path, 'w')
-	for key,val in props.items():
+	for key,val in list(props.items()):
 		if not val: continue
 		fh.write("%s: %s\n" % (key,val))
 	fh.write("\n")
@@ -135,7 +135,7 @@ class Issue:
 				responsible="nobody",
 				created=serialize_datetime(datetime.utcnow()),
 				reporter=_CONFIG['username'])
-		for k,v in properties.items():
+		for k,v in list(properties.items()):
 			self.properties[k] = v
 		self.msg = message
 		self.guid = guid or str(uuid4())
@@ -150,7 +150,7 @@ class Issue:
 	def longString(self):
 		"""Multi line representation"""
 		string = "%s\n" % (self.guid)
-		for k,v in self.properties.items():
+		for k,v in list(self.properties.items()):
 			string += "%s: %s\n" % (k,v)
 		string += "\n" + self.msg
 		return string
@@ -172,9 +172,9 @@ def be_complete_guid(halfguid):
 	for guid in _HOOKS.be_all_guids():
 		if guid.startswith(halfguid):
 			if found:
-				print "The guid part is ambiguous:"
-				print guid, "or"
-				print found, "?"
+				print("The guid part is ambiguous:")
+				print(guid, "or")
+				print(found, "?")
 				return
 			else:
 				found = guid
@@ -207,7 +207,7 @@ def cmd_init(args):
 	"""Create a new data directory for issues in the current dir."""
 	try:
 		os.mkdir(_DATA_DIR)
-	except OSError, e:
+	except OSError as e:
 		error("Could not create data directory: " + str(e))
 	store_config(os.path.join(_DATA_DIR, _CONFIG_FILE_NAME))
 
@@ -217,7 +217,7 @@ def cmd_add(args):
 	issue = Issue()
 	issue.msg = args.pop(0)
 	_HOOKS.be_store_issue(issue)
-	print "issue stored as", issue.guid
+	print("issue stored as", issue.guid)
 
 def gen_matcher(args):
 	"""Generate an issue matcher from command line arguments"""
@@ -273,7 +273,7 @@ Examples:
 		# if args specified search in properties,
 		# otherwise list all issues not closed.
 		if matcher(issue):
-			print issue.shortString()
+			print(issue.shortString())
 
 @hooked
 def cmd_edit(args):
@@ -297,7 +297,7 @@ If none specified a new issue is generated (like add does.)"""
 	issue = Issue(issue.guid, p, m)
 	_HOOKS.be_store_issue(issue) # updates modified properties
 	if not guid: # generated a new issue
-		print "Issue stored as", issue.guid
+		print("Issue stored as", issue.guid)
 
 @hooked
 def cmd_show(args):
@@ -308,7 +308,7 @@ def cmd_show(args):
 	if not guid:
 		return
 	issue = _HOOKS.be_load_issue(guid)
-	print issue.longString()
+	print(issue.longString())
 
 @hooked
 def set_status(guid, status):
@@ -376,18 +376,18 @@ export                      export data in json format
 def cmd_help(args=[]):
 	"""Provides general usage and help for every command."""
 	if len(args) == 0:
-		print _USAGE
+		print(_USAGE)
 		return
 	fun = _HOOKS.get("cmd_" + args[0], None)
 	if not fun:
-		print "Can not help you with that. Typo?"
+		print("Can not help you with that. Typo?")
 		return
 	# print docstring as help for a specific command
-	print fun.__doc__
+	print(fun.__doc__)
 
 def main():
 	if len(sys.argv) <= 1:
-		print _USAGE
+		print(_USAGE)
 		return
 
 	if sys.argv[1] == "init":
@@ -399,7 +399,7 @@ def main():
 	fun = _HOOKS.get("cmd_" + sys.argv[1], None)
 	if not fun: 
 		return _HOOKS.cmd_help()
-	print
+	print()
 	
 	fun(sys.argv[2:])
 

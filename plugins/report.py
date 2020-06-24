@@ -233,7 +233,7 @@ Generates a report that renders data in a simple site to view the issues. Usage:
     
     ### Generate current date
     dte = datetime.datetime.now().strftime('%Y%m%d %H%M')
-    print template_full + dte + template_full_1 + dte + template_full_2 + revs_html + template_full_3
+    print((template_full + dte + template_full_1 + dte + template_full_2 + revs_html + template_full_3))
 
 def plugin_init(hooks):
 	global _HOOKS

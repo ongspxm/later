@@ -48,9 +48,9 @@ def revision_list(be=0):
 	if be: return revs
 	
 	if revs:
-		print 'Revision (latest on top):\n '+'\n '.join(revs)
+		print(('Revision (latest on top):\n '+'\n '.join(revs)))
 	else:
-		print 'No revisions available'
+		print('No revisions available')
 
 def revision_new(name):
 	"""
@@ -58,20 +58,20 @@ def revision_new(name):
 	"""
 	
 	if not avail_name(name):
-		print 'Cannot use %s, already taken'%name
+		print(('Cannot use %s, already taken'%name))
 		return 
 
 	issues = [iss for iss in pending_issues() if iss.properties['status']=='closed']
 	
 	if not len(issues):
-		print 'Error. Nothing to add to revision', name
+		print(('Error. Nothing to add to revision', name))
 		return
 
-	print 'Issues under revision %s:'%name
+	print(('Issues under revision %s:'%name))
 	for iss in issues:
 		iss.properties['revision'] = name
 		_HOOKS.be_store_issue(iss)
-		print iss.shortString()
+		print((iss.shortString()))
 	
 	rev = rev_file()
 	revs = [l.strip() for l in open(rev).readlines() if l.strip()]
@@ -82,25 +82,25 @@ def revision_new(name):
 
 def revision_show(name):
 	if avail_name(name):
-		print '%s does not exist, did you get the name right?'%name
+		print(('%s does not exist, did you get the name right?'%name))
 		return
 	
 	issues = [iss.shortString() for iss in all_issues() if iss.properties.get('revision')==name]
 	
 	if not len(issues):
-		print 'There is nothing in revision', name
+		print(('There is nothing in revision', name))
 		return
 
-	print 'Issues under revision %s:'%name
-	print '\n'.join(issues)
+	print(('Issues under revision %s:'%name))
+	print(('\n'.join(issues)))
 
 def revision_rollback():
 	try: 
 		revs = open(rev_file()).readlines()
 		rev = revs[-1].strip()
 		assert (rev)
-	except IndexError, AssertionError:
-		print 'No revision available'
+	except IndexError as AssertionError:
+		print('No revision available')
 		return
 	
 	for iss in all_issues(): 
@@ -114,19 +114,19 @@ def revision_rollback():
 	fh.write('\n'.join(revs)+'\n')
 	fh.close()
 
-	print 'Revision %s removed'%rev
+	print(('Revision %s removed'%rev))
 
 def revision_status():
 	issues =  pending_issues() 
 
 	if not issues:
-		print 'There is nothing to add to your revision'
+		print('There is nothing to add to your revision')
 
 	for iss in issues:
-		print iss.shortString()
+		print((iss.shortString()))
 
 def revision_help():
-	print _HOOKS.get('cmd_revision').__doc__
+	print((_HOOKS.get('cmd_revision').__doc__))
 
 def cmd_revision(args):
 	"""
@@ -147,15 +147,15 @@ revision show <rev_name>	Show issues in <rev_name>
 		return revision_list(len(args))
 	elif cmd=='new':
 		if not len(args):
-			print 'Please insert valid revision name'
-			print revision_new.__doc__
+			print('Please insert valid revision name')
+			print((revision_new.__doc__))
 			return
 		
 		revision_new(' '.join(args))
 	elif cmd=='show':
 		if not len(args):
-			print 'Please insert valid revision name'
-			print revision_show.__doc__
+			print('Please insert valid revision name')
+			print((revision_show.__doc__))
 			return
 
 		revision_show(' '.join(args))
@@ -164,7 +164,7 @@ revision show <rev_name>	Show issues in <rev_name>
 	elif cmd=='status':
 		revision_status()
 	else:
-		print 'Error: unrecognized command\n'
+		print('Error: unrecognized command\n')
 		return revision_help()
 
 

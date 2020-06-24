@@ -97,15 +97,15 @@ def cmd_htmlreport(args):
       else:
          delayed.append(info)
    # output
-   print _HTML_HEAD
-   print stats.toHTML()
+   print(_HTML_HEAD)
+   print((stats.toHTML()))
    for info in opened:
-      print _HTML_ISSUE % info
+      print((_HTML_ISSUE % info))
    if delayed:
-      print "<hr/>"
+      print("<hr/>")
    for info in delayed:
-      print _HTML_ISSUE % info
-   print _HTML_FOOT
+      print((_HTML_ISSUE % info))
+   print(_HTML_FOOT)
 
 def plugin_init(hooks):
    global _HOOKS

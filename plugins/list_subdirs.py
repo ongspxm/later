@@ -23,7 +23,7 @@ For details see "help list" """
 		path = path[:-7]
 		if len(path) > 2:
 			path = path[2:]
-		print ":"*10, path
+		print((":"*10, path))
 		ret = os.getcwd()
 		os.chdir(path)
 		os.system("%s list %s" % (cmd, " ".join(args)))
